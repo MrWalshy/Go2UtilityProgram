@@ -55,6 +55,7 @@ class OptionsForm(tk.Frame):
         )
 
     def submit(self):
+        self.focus_set() # force focus away from inputs to fire focus out events
         # p_core_limit = 0 if self.p_core_limit_entry.get_value() == "" else int(self.p_core_limit_entry.get_value())
         # e_core_limit = 0 if self.e_core_limit_entry.get_value() == "" else int(self.e_core_limit_entry.get_value())
         p_core_limit = self.p_core_limit_slider.get_value()
@@ -83,7 +84,7 @@ class OptionsForm(tk.Frame):
             set_p_core_limit(active_plan, p_core_limit)
             set_e_core_limit(active_plan, e_core_limit)
             set_cpu_boost_mode(active_plan, boost_mode)
-            set_energy_performance_preference(active_plan, epp)
-            messagebox.showinfo("Result", f"Set P core limit to {p_core_limit}MHz,\nE core limit to {e_core_limit}Mhz,\nCPU Boost mode to {boost_mode}") 
+            set_energy_performance_preference(active_plan, percentage = epp)
+            messagebox.showinfo("Result", f"Set P core limit to {p_core_limit}MHz,\nE core limit to {e_core_limit}Mhz,\nCPU Boost mode to {boost_mode},\nEPP to {epp}%") 
         except subprocess.CalledProcessError as e:
             messagebox.showerror("Error", f"Failed:\n{e}")

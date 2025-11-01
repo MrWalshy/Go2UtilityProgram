@@ -139,7 +139,7 @@ class SliderWithEntry(tk.Frame):
             self.help_label.pack(anchor = "w", pady = (2, 0))
         
         # event bindings
-        self.scale.bind("<Motion>", self._update_entry_from_slider)
+        self.scale.bind("<B1-Motion>", self._update_entry_from_slider) # "<Motion>" causes hover bug that resets field to initial value on hover over sliders
         self.scale.bind("<ButtonRelease-1>", self._update_entry_from_slider)
         self.entry.bind("<Return>", self._update_slider_from_entry)
         self.entry.bind("<FocusOut>", self._update_slider_from_entry)
@@ -163,6 +163,9 @@ class SliderWithEntry(tk.Frame):
         self.entry.insert(0, str(value))
 
     def get_value(self):
+        # if we clicked submit after typing in the entry field, 
+        # the value doesn't get picked up as no event fires. do this to compensate
+        self._update_slider_from_entry()
         return self.value.get()
     
     def set_value(self, value):
