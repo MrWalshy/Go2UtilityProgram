@@ -1,27 +1,15 @@
-\# Go 2 Utility
-
-
+# Go 2 Utility
 
 Allows for quick tweaking of:
 
+- P and E core limits
+- Energy Performance preference
+- CPU boost mode
 
-
-* P and E core limits
-* CPU boost mode
-
-
-
-\## Build
-
-
+## Build
 
 Using `pyinstaller` to package as exe:
 
-
-
 ```
-
 pyinstaller --onefile app/app.py
-
 ```
-
