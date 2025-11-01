@@ -29,7 +29,7 @@ class OptionsForm(tk.Frame):
         # self.e_core_limit_entry = NumericEntry(self)
         # self.e_core_limit_entry.grid(row = 1, column = 1, padx = 5, pady = 5)
         self.e_core_limit_slider = SliderWithEntry(
-            self, label = "P-Core Frequency Limit",
+            self, label = "E-Core Frequency Limit",
             from_ = 0, to = 3300,
             unit = "MHz", help_text = "Adjust the maximum E-core clock limit, 0 = no limit."
         )

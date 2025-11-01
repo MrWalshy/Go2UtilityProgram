@@ -59,6 +59,8 @@ def set_plan_setting(power_scheme, subgroup, setting, value):
     print("value =", value, type(value))
     subprocess.run(cmd_ac, check = True)
     subprocess.run(cmd_dc, check = True)
+    # force power plan reload to ensure values actually take effect
+    subprocess.run(["powercfg", "/setactive", power_scheme], check = True)
 
 def set_p_core_limit(power_scheme_guid, mhz = -1):
     if mhz == -1:
