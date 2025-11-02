@@ -80,7 +80,7 @@ class OptionsForm(tk.Frame):
 
         if self.apply_epp.get():
             value = self.epp_slider.get_value()
-            settings.append(("EPP Limit (%)", set_e_core_limit, value))
+            settings.append(("EPP Limit (%)", set_energy_performance_preference, value))
         
         if self.apply_cpu_boost.get():
             value = self.cpu_boost_group.get_value()
@@ -92,29 +92,9 @@ class OptionsForm(tk.Frame):
             for label, fn, value in settings:
                 fn(active_plan, value)
                 summary += f"{label}: {value}\n"
-            messagebox.showinfo("Result", "Applied:\n{summary}")
+            messagebox.showinfo("Result", f"Applied:\n{summary}")
         except subprocess.CalledProcessError as e:
             messagebox.showerror("Error", f"Failed:\n{e}")
-        ### OLD ###
-        # p_core_limit = self.p_core_limit_slider.get_value()
-        # e_core_limit = self.e_core_limit_slider.get_value()
-        # epp_value = self.epp_slider.get_value()
-        # cpu_boost_mode = self.cpu_boost_group.get_value()
-        # error_message = ""
-        # error = False
-        
-        # if not validate_range(p_core_limit, 0, 5000):
-        #     error_message += "P core must be in range 0 - 5000\n"
-        #     error = True
-        # if not validate_range(e_core_limit, 0, 3300):
-        #     error_message += "E core must be in range 0 - 3300\n"
-        #     error = True
-
-        # if error:
-        #     messagebox.showerror("Error", error_message)
-        #     return
-        # else:
-        #     self.apply_settings(p_core_limit, e_core_limit, cpu_boost_mode, epp_value)
 
     def apply_settings(self, p_core_limit, e_core_limit, boost_mode, epp):
         try:
