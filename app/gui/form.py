@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import ttk, messagebox
 from gui.widgets import RadioGroup, SliderWithEntry
 from logic.validators import validate_range
 from logic.power_plan import get_active_power_scheme, set_p_core_limit, set_e_core_limit, set_cpu_boost_mode, set_energy_performance_preference
@@ -14,34 +14,52 @@ class OptionsForm(tk.Frame):
         self.create_widgets()
 
     def create_widgets(self):
+        # options checkbox vars
+        self.apply_p_core = tk.BooleanVar(value = False)
+        self.apply_e_core = tk.BooleanVar(value = False)
+        self.apply_epp = tk.BooleanVar(value = False)
+        self.apply_cpu_boost = tk.BooleanVar(value = False)
+
         # p and e core limit fields
+        p_frame = ttk.Frame(self)
+        p_frame.grid(row = 0, columnspan = 2, padx = 10, pady = 10, sticky = "we")
+        ttk.Checkbutton(p_frame, text = "Apply", variable = self.apply_p_core).pack(side = "left", padx = 5)
         self.p_core_limit_slider = SliderWithEntry(
-            self, label = "P-Core Frequency Limit",
+            p_frame, label = "P-Core Frequency Limit",
             from_ = 0, to = 5000,
             unit = "MHz", help_text = "Adjust the maximum P-core clock limit, 0 = no limit."
         )
-        self.p_core_limit_slider.grid(row = 0, columnspan = 2, padx = 10, pady = 10, sticky = "we")
+        self.p_core_limit_slider.pack(fill = "x", expand = True, padx = 5)
 
+        e_frame = ttk.Frame(self)
+        e_frame.grid(row = 1, columnspan = 2, padx = 10, pady = 10, sticky = "we")
+        ttk.Checkbutton(e_frame, text = "Apply", variable = self.apply_e_core).pack(side = "left", padx = 5)
         self.e_core_limit_slider = SliderWithEntry(
-            self, label = "E-Core Frequency Limit",
+            e_frame, label = "E-Core Frequency Limit",
             from_ = 0, to = 3300,
             unit = "MHz", help_text = "Adjust the maximum E-core clock limit, 0 = no limit."
         )
-        self.e_core_limit_slider.grid(row = 1, columnspan = 2, padx = 10, pady = 10, sticky = "we")
+        self.e_core_limit_slider.pack(fill = "x", expand = True, padx = 5)
 
         # epp slider
+        epp_frame = ttk.Frame(self)
+        epp_frame.grid(row = 2, columnspan = 2, padx = 10, pady = 10, sticky = "we")
+        ttk.Checkbutton(epp_frame, text = "Apply", variable = self.apply_epp).pack(side = "left", padx = 5)
         self.epp_slider = SliderWithEntry(
-            self, label = "Energy Performance Preference",
+            epp_frame, label = "Energy Performance Preference",
             from_ = 0, to = 100, unit = "%",
             help_text = "0 prefers maximum CPU performance, 100 prefers highest energy saving"
         )
-        self.epp_slider.grid(row = 2, columnspan = 2, padx = 10, pady = 10, sticky = "we")
+        self.epp_slider.pack(fill = "x", expand = True, padx = 5)
 
         # cpu boost options
+        boost_frame = ttk.Frame(self)
+        boost_frame.grid(row = 3, columnspan = 2, sticky = "w", pady = 5)
+        ttk.Checkbutton(boost_frame, text = "Apply", variable = self.apply_cpu_boost).pack(side = "left", padx = 5)
         self.cpu_boost_group = RadioGroup(
-            "CPU Boost:", ["Enabled", "Disabled"], default = "Enabled", orient = "vertical", master = self
+            "CPU Boost:", ["Enabled", "Disabled"], default = "Enabled", orient = "vertical", master = boost_frame
         )
-        self.cpu_boost_group.grid(row = 3, columnspan = 2, sticky = "w", pady = 5)
+        self.cpu_boost_group.pack(fill = "x", expand = True, padx = 5)
 
         # submit button
         tk.Button(self, text = "Submit", command = self.submit).grid(
@@ -50,25 +68,53 @@ class OptionsForm(tk.Frame):
 
     def submit(self):
         self.focus_set() # force focus away from inputs to fire focus out events
-        p_core_limit = self.p_core_limit_slider.get_value()
-        e_core_limit = self.e_core_limit_slider.get_value()
-        epp_value = self.epp_slider.get_value()
-        cpu_boost_mode = self.cpu_boost_group.get_value()
-        error_message = ""
-        error = False
-        
-        if not validate_range(p_core_limit, 0, 5000):
-            error_message += "P core must be in range 0 - 5000\n"
-            error = True
-        if not validate_range(e_core_limit, 0, 3300):
-            error_message += "E core must be in range 0 - 3300\n"
-            error = True
+        settings = []
 
-        if error:
-            messagebox.showerror("Error", error_message)
-            return
-        else:
-            self.apply_settings(p_core_limit, e_core_limit, cpu_boost_mode, epp_value)
+        if self.apply_p_core.get():
+            value = self.p_core_limit_slider.get_value()
+            settings.append(("P-Core Limit (MHz)", set_p_core_limit, value))
+        
+        if self.apply_e_core.get():
+            value = self.e_core_limit_slider.get_value()
+            settings.append(("E-Core Limit (MHz)", set_e_core_limit, value))
+
+        if self.apply_epp.get():
+            value = self.epp_slider.get_value()
+            settings.append(("EPP Limit (%)", set_e_core_limit, value))
+        
+        if self.apply_cpu_boost.get():
+            value = self.cpu_boost_group.get_value()
+            settings.append(("CPU Boost Mode", set_cpu_boost_mode, value))
+        
+        try:
+            summary = ""
+            active_plan = get_active_power_scheme()
+            for label, fn, value in settings:
+                fn(active_plan, value)
+                summary += f"{label}: {value}\n"
+            messagebox.showinfo("Result", "Applied:\n{summary}")
+        except subprocess.CalledProcessError as e:
+            messagebox.showerror("Error", f"Failed:\n{e}")
+        ### OLD ###
+        # p_core_limit = self.p_core_limit_slider.get_value()
+        # e_core_limit = self.e_core_limit_slider.get_value()
+        # epp_value = self.epp_slider.get_value()
+        # cpu_boost_mode = self.cpu_boost_group.get_value()
+        # error_message = ""
+        # error = False
+        
+        # if not validate_range(p_core_limit, 0, 5000):
+        #     error_message += "P core must be in range 0 - 5000\n"
+        #     error = True
+        # if not validate_range(e_core_limit, 0, 3300):
+        #     error_message += "E core must be in range 0 - 3300\n"
+        #     error = True
+
+        # if error:
+        #     messagebox.showerror("Error", error_message)
+        #     return
+        # else:
+        #     self.apply_settings(p_core_limit, e_core_limit, cpu_boost_mode, epp_value)
 
     def apply_settings(self, p_core_limit, e_core_limit, boost_mode, epp):
         try:
