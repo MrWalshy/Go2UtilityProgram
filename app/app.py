@@ -20,15 +20,10 @@ if __name__ == "__main__":
     run_as_admin()
 
     try:
-        from gui.form import OptionsForm
         from gui.window import Window
         from gui.pages.processor_settings import ProcessorSettingsPage
         from gui.pages.power_settings import PowerSettingsPage
-        import tkinter as tk
-        # root = tk.Tk()
-        # root.title("Go 2 Options")
-        # OptionsForm(master = root)
-        # root.mainloop()
+
         window = Window(pages = [
             (ProcessorSettingsPage, "Processor performance settings"),
             (PowerSettingsPage, "Power settings")

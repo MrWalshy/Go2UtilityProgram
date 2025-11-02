@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from gui.widgets import NumericEntry, RadioGroup, Slider, SliderWithEntry
+from gui.widgets import RadioGroup, SliderWithEntry
 from logic.validators import validate_range
 from logic.power_plan import get_active_power_scheme, set_p_core_limit, set_e_core_limit, set_cpu_boost_mode, set_energy_performance_preference
 import subprocess
@@ -15,9 +15,6 @@ class OptionsForm(tk.Frame):
 
     def create_widgets(self):
         # p and e core limit fields
-        # tk.Label(self, text = "CPU P Core limit (MHz):").grid(row = 0, column = 0, sticky = "w")
-        # self.p_core_limit_entry = NumericEntry(self)
-        # self.p_core_limit_entry.grid(row = 0, column = 1, padx = 5, pady = 5)
         self.p_core_limit_slider = SliderWithEntry(
             self, label = "P-Core Frequency Limit",
             from_ = 0, to = 5000,
@@ -25,9 +22,6 @@ class OptionsForm(tk.Frame):
         )
         self.p_core_limit_slider.grid(row = 0, columnspan = 2, padx = 10, pady = 10, sticky = "we")
 
-        # tk.Label(self, text = "CPU E Core limit (MHz):").grid(row = 1, column = 0, sticky = "w")
-        # self.e_core_limit_entry = NumericEntry(self)
-        # self.e_core_limit_entry.grid(row = 1, column = 1, padx = 5, pady = 5)
         self.e_core_limit_slider = SliderWithEntry(
             self, label = "E-Core Frequency Limit",
             from_ = 0, to = 3300,
@@ -56,8 +50,6 @@ class OptionsForm(tk.Frame):
 
     def submit(self):
         self.focus_set() # force focus away from inputs to fire focus out events
-        # p_core_limit = 0 if self.p_core_limit_entry.get_value() == "" else int(self.p_core_limit_entry.get_value())
-        # e_core_limit = 0 if self.e_core_limit_entry.get_value() == "" else int(self.e_core_limit_entry.get_value())
         p_core_limit = self.p_core_limit_slider.get_value()
         e_core_limit = self.e_core_limit_slider.get_value()
         epp_value = self.epp_slider.get_value()
