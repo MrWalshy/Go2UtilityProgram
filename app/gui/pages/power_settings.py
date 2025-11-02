@@ -8,6 +8,9 @@ class PowerSettingsPage(tk.Frame):
         self.controller = controller
 
         tk.Label(self, text = "Power settings", font = ("Segoe UI", 14, "bold")).pack(pady = 5)
+        text = tk.Text(self)
+        text.insert("1.0", "To be decided...")
+        text.pack(pady = 5)
     
     def apply_settings(self):
         pass
