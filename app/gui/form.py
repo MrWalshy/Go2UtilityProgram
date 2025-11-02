@@ -27,7 +27,7 @@ class OptionsForm(tk.Frame):
         self.p_core_limit_slider = SliderWithEntry(
             p_frame, label = "P-Core Frequency Limit",
             from_ = 0, to = 5000,
-            unit = "MHz", help_text = "Adjust the maximum P-core clock limit, 0 = no limit."
+            unit = "MHz", help_text = "Adjust the maximum P-core clock limit, 0 = no limit.\nNote: Values below ~1225, except 0, cause the P-core clocks to get stuck at ~600MHz."
         )
         self.p_core_limit_slider.pack(fill = "x", expand = True, padx = 5)
 
@@ -37,7 +37,7 @@ class OptionsForm(tk.Frame):
         self.e_core_limit_slider = SliderWithEntry(
             e_frame, label = "E-Core Frequency Limit",
             from_ = 0, to = 3300,
-            unit = "MHz", help_text = "Adjust the maximum E-core clock limit, 0 = no limit."
+            unit = "MHz", help_text = "Adjust the maximum E-core clock limit, 0 = no limit.\nNote: Values below ~1225, except 0, cause the E-core clocks to get stuck at ~600MHz."
         )
         self.e_core_limit_slider.pack(fill = "x", expand = True, padx = 5)
 
