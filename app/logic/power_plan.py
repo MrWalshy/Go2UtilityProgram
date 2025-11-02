@@ -44,6 +44,28 @@ def get_active_power_scheme():
     match = re.search(r"GUID:\s*([a-f0-9\-]+)", result.stdout, re.I)
     return match.group(1) if match else None
 
+def get_power_setting(scheme, subgroup, setting):
+    '''Read the current power setting value.'''
+    try:
+        print(f"Reading: {scheme} {subgroup} {setting}")
+        result = subprocess.run(
+            ["powercfg", "/query", scheme, subgroup, setting],
+            capture_output = True, text = True, check = True
+        )
+        print(f"Returned: {result}")
+        # match = re.search(r"Power Setting Index:\s*0x[0-9A-Fa-f]+\s*\((\d+)\)", result.stdout)
+        # if match:
+        #     return int(match.group(1))
+        ac_match = re.search(r"Current AC Power Setting Index:\s+0x(\w+)", result.stdout)
+        dc_match = re.search(r"Current DC Power Setting Index:\s+0x(\w+)", result.stdout)
+
+        ac_value = int(ac_match.group(1), 16) if ac_match else None
+        dc_value = int(dc_match.group(1), 16) if dc_match else None
+        return ac_value
+    except subprocess.CalledProcessError as e:
+        print("Power setting query failed: {e}")
+    return None
+
 def set_plan_setting(power_scheme, subgroup, setting, value):
     cmd_ac = [
         "powercfg", "/setacvalueindex",
@@ -72,6 +94,15 @@ def set_p_core_limit(power_scheme_guid, mhz = -1):
         mhz
     )
 
+def get_p_core_limit(power_scheme_guid):
+    print("Attempting to get P core limit")
+    value = get_power_setting(
+        power_scheme_guid, subgroups["PROCESSOR_POWER_MANAGEMENT"]["GUID"],
+        options["MAX_P_CORE_FREQ"]["GUID"]
+    )
+    print(f"Found: {value}")
+    return value
+
 def set_e_core_limit(power_scheme_guid, mhz = -1):
     if mhz == -1:
         return
@@ -82,6 +113,14 @@ def set_e_core_limit(power_scheme_guid, mhz = -1):
         mhz
     )
     
+def get_e_core_limit(power_scheme_guid):
+    print("Attempting to get E core limit")
+    value = get_power_setting(
+        power_scheme_guid, subgroups["PROCESSOR_POWER_MANAGEMENT"]["GUID"],
+        options["MAX_E_CORE_FREQ"]["GUID"]
+    )
+    print(f"Found: {value}")
+    return value
 
 def set_cpu_boost_mode(power_scheme_guid, mode = ""):
     if mode == "":
@@ -93,6 +132,15 @@ def set_cpu_boost_mode(power_scheme_guid, mode = ""):
         options["PROCESSOR_PERFORMANCE_BOOST_MODE"]["GUID"],
         value
     )
+
+def get_cpu_boost_mode(power_scheme_guid):
+    print("Attempting to get CPU boost mode")
+    value = get_power_setting(
+        power_scheme_guid, subgroups["PROCESSOR_POWER_MANAGEMENT"]["GUID"],
+        options["PROCESSOR_PERFORMANCE_BOOST_MODE"]["GUID"]
+    )
+    print(f"Found: {value}")
+    return value
 
 def set_energy_performance_preference(power_scheme_guid, percentage = 0):
     print(f"Setting CPU EPP to: {percentage}%")
@@ -106,3 +154,12 @@ def set_energy_performance_preference(power_scheme_guid, percentage = 0):
         options["EPP_E_CORE"]["GUID"],
         percentage
     )
+
+def get_energy_performance_preference(power_scheme_guid):
+    print("Attempting to get energy performance preference")
+    value = get_power_setting(
+        power_scheme_guid, subgroups["PROCESSOR_POWER_MANAGEMENT"]["GUID"],
+        options["EPP_P_CORE"]["GUID"]
+    )
+    print(f"Found: {value}")
+    return value

@@ -6,6 +6,6 @@ def validate_range(value: int, min: int, max: int) -> bool:
 
 def validate_numeric_in_range(value: str, min: int, max: int) -> bool:
     if not validate_numeric(value):
-        return false
+        return False
     num = 0 if value == "" else int(value)
     return validate_range(num, min, max)
