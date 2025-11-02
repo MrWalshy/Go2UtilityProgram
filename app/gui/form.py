@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from gui.widgets import RadioGroup, SliderWithEntry
 from logic.validators import validate_range
-from logic.power_plan import get_active_power_scheme, set_p_core_limit, set_e_core_limit, set_cpu_boost_mode, set_energy_performance_preference
+from logic.power_plan import get_active_power_scheme, set_p_core_limit, set_e_core_limit, set_cpu_boost_mode, set_energy_performance_preference, get_e_core_limit, get_p_core_limit, get_cpu_boost_mode, get_energy_performance_preference
 import subprocess
 
 class OptionsForm(tk.Frame):
@@ -12,6 +12,22 @@ class OptionsForm(tk.Frame):
         self.master = master
         self.pack(padx = 10, pady = 10)
         self.create_widgets()
+
+    def load_values(self):
+        plan = get_active_power_scheme()
+        p_core_value =  get_p_core_limit(plan)
+        e_core_value = get_e_core_limit(plan)
+        epp_value = get_energy_performance_preference(plan)
+        cpu_boost_value = get_cpu_boost_mode(plan)
+
+        if p_core_value is not None:
+            self.p_core_limit_slider.set_value(p_core_value)
+        if e_core_value is not None:
+            self.e_core_limit_slider.set_value(e_core_value)
+        if epp_value is not None:
+            self.epp_slider.set_value(epp_value)
+        if cpu_boost_value is not None:
+            self.cpu_boost_group.set_value("Disabled" if cpu_boost_value == 0 else "Enabled")
 
     def create_widgets(self):
         # options checkbox vars
@@ -65,6 +81,7 @@ class OptionsForm(tk.Frame):
         tk.Button(self, text = "Submit", command = self.submit).grid(
             row = 4, column = 0, columnspan = 2, pady = 10
         )
+        self.load_values()
 
     def submit(self):
         self.focus_set() # force focus away from inputs to fire focus out events
