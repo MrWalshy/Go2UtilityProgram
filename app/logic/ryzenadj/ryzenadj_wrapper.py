@@ -35,7 +35,7 @@ else:
 ########
 ##############################################
 
-os.chdir(lib_path)
+os.chdir(base_dir)
 if sys.platform == 'win32' or sys.platform == 'cygwin':
     try:
         os.add_dll_directory(base_dir)
