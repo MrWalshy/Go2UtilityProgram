@@ -21,6 +21,8 @@ pyinstaller --onefile app/app.py
 - [X] Populate form fields with the currently set values
 - [ ] AutoTDP and AutoTSP features (need to hook into some other tool like hwinfo for data)
 - [ ] GPU clock limit (ryzenadj?)
+- [ ] Power draw visualisation
+- [ ] ML analysis features? (maybe)
 
 ## Attributions
 

@@ -27,6 +27,24 @@ error_messages = {
     -4: "{:s} is rejected by SMU\n"
 }
 
+setter_fields = {
+    "stapm_limit": "Sustained PPT limit (mW, 10W = 10000mW)",
+    "fast_limit": "Fast PPT limit (mW, 10W = 10000mW)",
+    "slow_limit": "Slow PPT limit (mW, 10W = 10000mW)",
+    "min_gfxclk": "Minimum graphics clock (Hz/MHz/GHz?)",
+    "max_gfxclk": "Minimum graphics clock (Hz/MHz/GHz?)",
+    "gfxclk": "Minimum graphics clock (Hz/MHz/GHz?)"
+}
+
+getter_fields = {
+    "stapm_limit": "Sustained PPT limit (mW, 10W = 10000mW)",
+    "fast_limit": "Fast PPT limit (mW, 10W = 10000mW)",
+    "slow_limit": "Slow PPT limit (mW, 10W = 10000mW)",
+    "gfxclk": "Graphics clock (Hz/MHz/GHz?)",
+    "soc_power": "SoC power draw (imc and other bits)",
+    "socket_power": "Total package power (cores, cache, SoC, etc...)"
+}
+
 
 def is_ryzenadj_initialised() -> bool:
     if not ry:
@@ -37,7 +55,7 @@ def is_ryzenadj_initialised() -> bool:
 # - stapm_limit
 # - fast_limit
 # - slow_limit
-# - min_gfxclk, max_gfxclk, gfx_clk (will need to test if these work on Z2E)
+# - min_gfxclk, max_gfxclk, gfx_clk (will need to test if these work on Z2E and what units they take)
 def adjust(field, value): # (str, int32)
     function_name = "set_" + field
     adjust_func = ryzenadj.__getattr__(function_name) # dynamically looks up the function
