@@ -172,7 +172,7 @@ def test_get():
                 print('{:d} More entries ...'.format(pmtable_size - 1 - index))
                 break
     
-    if index % table_columns != table_columns - 1: print('\n')
+    #if index % table_columns != table_columns - 1: print('\n')
     #sys.stdout.flush()
     #time.sleep(1)
     # this tells me the memory cannot be accessed? WHYYYYYYY?
