@@ -129,6 +129,8 @@ def get(field):
         print(f"{function_name} not found in libryzenadj.dll\n")
         return None
     
+    ryzenadj.refresh_table(ry) # need to do this to make sure ryzenadj has read in the data, otherwise I just get nan
+
     get_func.argtypes = [c_void_p] # just the struct handle (ry: ryzen_access)
     get_func.restype = c_float # response type: EXP float CALL get_stapm_limit(ryzen_access ry);
     
