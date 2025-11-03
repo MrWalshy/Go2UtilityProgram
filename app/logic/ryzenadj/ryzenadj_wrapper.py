@@ -148,9 +148,42 @@ def get(field):
         #sys.stderr.write(f"{function_name} failed: {e}\n")
         print(f"{function_name} failed: {e}\n")
         return None
-    
+
+# get func just tells me memory cannot be accessed, will just try what is in the example script to check for diff response
+print("pmtable version: {:x}".format(ryzenadj.get_table_ver(ry)))
+
+#input("Press any key to show all pmtable values...")
+
+pmtable_size = ryzenadj.get_table_size(ry) // 4
+pmtable = ryzenadj.get_table_values(ry)
+
 def test_get():
+    ryzenadj.refresh_table(ry)
+    columns, lines = os.get_terminal_size()
+    table_columns = columns // 16 # 16 chars per table entry
+    #os.system('cls' if sys.platform == 'win32' else 'clear')
+    table_rows = 0
+    for index in (range(pmtable_size)):
+        print("{:3d}:{:8.2f}\t".format(index, pmtable[index]))
+        if index % table_columns == table_columns - 1: 
+            print('\n')
+            table_rows += 1
+            if table_rows >= lines - 1:
+                print('{:d} More entries ...'.format(pmtable_size - 1 - index))
+                break
+    
+    if index % table_columns != table_columns - 1: print('\n')
+    #sys.stdout.flush()
+    #time.sleep(1)
+    # this tells me the memory cannot be accessed? WHYYYYYYY?
     for func, description in getter_fields.items():
         print(f"Attempting get for {func}: {description}")
         value = get(func)
         print(f"  Received: {value}")
+
+    # let's see if trying to manually call the stapm function works
+    get_func = ryzenadj.get_stapm_limit
+    get_func.argtypes = [c_void_p]
+    get_func.restype = c_float
+    value = get_func(ry)
+    print("STAPM limit:", value)
