@@ -21,3 +21,7 @@ pyinstaller --onefile app/app.py
 - [X] Populate form fields with the currently set values
 - [ ] AutoTDP and AutoTSP features (need to hook into some other tool like hwinfo for data)
 - [ ] GPU clock limit (ryzenadj?)
+
+## Attributions
+
+- [RyzenAdj](https://github.com/FlyGoat/RyzenAdj) library used for interfacing with the Ryzen SMU, licensed under the GNU Lesser General Public License v3.0.
