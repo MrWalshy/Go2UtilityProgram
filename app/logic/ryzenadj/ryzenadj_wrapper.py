@@ -57,22 +57,28 @@ def is_ryzenadj_initialised() -> bool:
 # - slow_limit
 # - min_gfxclk, max_gfxclk, gfx_clk (will need to test if these work on Z2E and what units they take)
 def adjust(field, value): # (str, int32)
+    if not ry:
+        return
+    
     function_name = "set_" + field
     adjust_func = ryzenadj.__getattr__(function_name) # dynamically looks up the function
     adjust_func.argtypes = [c_void_p, c_ulong] # struct handle (ry), value arg
     res = adjust_func(ry, value)
     if res:
         error = error_messages.get(res, "{:s} did fail with {:d}\n")
-        sys.stderr.write(error.format(function_name, res));
+        print(error.format(function_name, res));
 
 def enable(field):
+    if not ry:
+        return
+    
     function_name = "set_" + field
     adjust_func = ryzenadj.__getattr__(function_name)
     adjust_func.argtypes = [c_void_p]
     res = adjust_func(ry)
     if res:
         error = error_messages.get(res, "{:s} did fail with {:d}\n")
-        sys.stderr.write(error.format(function_name, res));
+        print(error.format(function_name, res));
 
 # fields:
 # - stapm_limit, stapm_value
@@ -87,7 +93,7 @@ def get(field):
     try:
         get_func = ryzenadj.__getattr__(function_name)
     except AttributeError:
-        sys.stderr.write(f"{function_name} not found in libryzenadj.dll\n")
+        print(f"{function_name} not found in libryzenadj.dll\n")
         return None
     
     get_func.argtypes = [c_void_p] # just the struct handle (ry: ryzen_access)
@@ -97,5 +103,12 @@ def get(field):
         value = get_func(ry)
         return value
     except Exception as e:
-        sys.stderr.write(f"{function_name} failed: {e}\n")
+        #sys.stderr.write(f"{function_name} failed: {e}\n")
+        print(f"{function_name} failed: {e}\n")
         return None
+    
+def test_get():
+    for func, description in getter_fields.items():
+        print(f"Attempting get for {func}: {description}")
+        value = get(func)
+        print(f"  Received: {value}")

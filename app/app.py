@@ -5,6 +5,7 @@ import subprocess
 from tkinter import messagebox
 
 from logic.sys_info import test
+from logic.ryzenadj.ryzenadj_wrapper import test_get
 
 CONFIG_FILE = os.path.join(os.getenv("APPDATA"), "Go2Utility", "config.txt")
 
@@ -61,6 +62,8 @@ if __name__ == "__main__":
 
     try:
         test()
+        test_get()
+        
         from gui.window import Window
         from gui.pages.processor_settings import ProcessorSettingsPage
         from gui.pages.power_settings import PowerSettingsPage
