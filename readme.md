@@ -28,4 +28,4 @@ pyinstaller --onefile app/app.py
 
 ## Attributions
 
-- [RyzenAdj](https://github.com/FlyGoat/RyzenAdj) library used for interfacing with the Ryzen SMU, licensed under the GNU Lesser General Public License v3.0.
+- [RyzenAdj 0.17.0](https://github.com/FlyGoat/RyzenAdj) library used for interfacing with the Ryzen SMU, licensed under the GNU Lesser General Public License v3.0.
