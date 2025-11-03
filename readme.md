@@ -22,6 +22,7 @@ pyinstaller --onefile app/app.py
 - [ ] AutoTDP and AutoTSP features (need to hook into some other tool like hwinfo for data)
 - [ ] GPU clock limit (ryzenadj?)
 - [ ] Power draw visualisation
+- [ ] Data exporting (CSV?)
 - [ ] ML analysis features? (maybe)
 
 ## Attributions
