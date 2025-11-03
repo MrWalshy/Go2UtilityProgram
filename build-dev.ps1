@@ -1,0 +1,2 @@
+pyinstaller --onefile app/app.py --name Go2Utility --add-binary "app/logic/ryzenadj/libryzenadj.dll;." --add-binary "app/logic/ryzenadj/WinRing0x64.dll;." --add-binary "app/logic/ryzenadj/WinRing0x64.sys;."
+
