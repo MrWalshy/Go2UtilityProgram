@@ -24,6 +24,7 @@ pyinstaller --onefile app/app.py
 - [ ] Power draw visualisation
 - [ ] Data exporting (CSV?)
 - [ ] ML analysis features? (maybe)
+- [ ] GUI redesign (nice to have, back burner for now)
 
 ## Attributions
 
