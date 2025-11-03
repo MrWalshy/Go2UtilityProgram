@@ -8,22 +8,24 @@ from shutil import copyfile
 # dll_path = os.path.join(script_dir, "libryzenadj.dll")
 # ryzenadj = ctypes.CDLL(dll_path)
 
+lib_path = os.path.dirname(os.path.abspath(__file__))
+
 if getattr(sys, 'frozen', False):
     base_dir = os.path.dirname(sys.executable) # pyinstaller exe
 else:
     base_dir = os.path.dirname(os.path.abspath(__file__)) # running from script
 
 ######## if i don't include this, the script shits itself for some reason and won't init ryzenadj
-os.chdir(base_dir)
+os.chdir(lib_path)
 if sys.platform == 'win32' or sys.platform == 'cygwin':
     try:
-        os.add_dll_directory(base_dir)
+        os.add_dll_directory(lib_path)
     except AttributeError:
         pass #not needed for old python version
 
-    winring0_driver_file_path = os.path.join(os.path.dirname(base_dir), 'WinRing0x64.sys')
+    winring0_driver_file_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), 'WinRing0x64.sys')
     if not os.path.isfile(winring0_driver_file_path):
-        copyfile(os.path.join(base_dir, 'WinRing0x64.sys'), winring0_driver_file_path)
+        copyfile(os.path.join(lib_path, 'WinRing0x64.sys'), winring0_driver_file_path)
 
     ryzenadj = cdll.LoadLibrary('libryzenadj')
 else:
@@ -157,20 +159,23 @@ pmtable = ryzenadj.get_table_values(ry)
 
 def test_get():
     #ryzenadj.refresh_table(ry) # need to do this to make sure ryzenadj has read in the data, otherwise I just get nan
-    ryzenadj.refresh_table(ry)
-    columns, lines = os.get_terminal_size()
-    table_columns = columns // 16 # 16 chars per table entry
-    #os.system('cls' if sys.platform == 'win32' else 'clear')
-    table_rows = 0
-    for index in (range(pmtable_size)):
-        print("{:3d}:{:8.2f}\t".format(index, pmtable[index]))
-        if index % table_columns == table_columns - 1: 
-            print('\n')
-            table_rows += 1
-            if table_rows >= lines - 1:
-                print('{:d} More entries ...'.format(pmtable_size - 1 - index))
-                break
-    
+    i = 0
+    while i < 10: # let's just see if its a weird timing issue
+        ryzenadj.refresh_table(ry)
+        columns, lines = os.get_terminal_size()
+        table_columns = columns // 16 # 16 chars per table entry
+        #os.system('cls' if sys.platform == 'win32' else 'clear')
+        table_rows = 0
+        for index in (range(pmtable_size)):
+            print("{:3d}:{:8.2f}\t".format(index, pmtable[index]))
+            if index % table_columns == table_columns - 1: 
+                print('\n')
+                table_rows += 1
+                if table_rows >= lines - 1:
+                    print('{:d} More entries ...'.format(pmtable_size - 1 - index))
+                    break
+        i += 1
+        time.sleep(1) 
     #if index % table_columns != table_columns - 1: print('\n')
     #sys.stdout.flush()
     #time.sleep(1)
