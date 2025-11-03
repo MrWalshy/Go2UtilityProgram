@@ -1,10 +1,29 @@
 import os, sys, time
 import ctypes
-from ctypes import c_double, c_uint32, c_char_p, c_void_p, c_float, c_ulong, byref, POINTER
+from ctypes import c_double, c_uint32, c_char_p, c_void_p, c_float, c_ulong, byref, POINTER, cdll
+from shutil import copyfile
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
+lib_path = script_dir
 dll_path = os.path.join(script_dir, "libryzenadj.dll")
 ryzenadj = ctypes.CDLL(dll_path)
+
+######## if i don't include this, the script shits itself for some reason and won't init ryzenadj
+# os.chdir(lib_path)
+if sys.platform == 'win32' or sys.platform == 'cygwin':
+    try:
+        os.add_dll_directory(lib_path)
+    except AttributeError:
+        pass #not needed for old python version
+
+    winring0_driver_file_path = os.path.join(os.path.dirname(script_dir), 'WinRing0x64.sys')
+    if not os.path.isfile(winring0_driver_file_path):
+        copyfile(os.path.join(lib_path, 'WinRing0x64.sys'), winring0_driver_file_path)
+
+    lib = cdll.LoadLibrary('libryzenadj')
+else:
+    lib = cdll.LoadLibrary('libryzenadj.so')
+########
 
 # ctype mappings (function args and return types?)
 ryzenadj.init_ryzenadj.restype = c_void_p
