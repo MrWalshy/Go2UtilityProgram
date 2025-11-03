@@ -15,22 +15,40 @@ if getattr(sys, 'frozen', False):
 else:
     base_dir = os.path.dirname(os.path.abspath(__file__)) # running from script
 
+#############################
 ######## if i don't include this, the script shits itself for some reason and won't init ryzenadj
+## this works for running the python script, but fails for pyinstall exe as it cannot find the dir
+# os.chdir(lib_path)
+# if sys.platform == 'win32' or sys.platform == 'cygwin':
+#     try:
+#         os.add_dll_directory(lib_path)
+#     except AttributeError:
+#         pass #not needed for old python version
+
+#     winring0_driver_file_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), 'WinRing0x64.sys')
+#     if not os.path.isfile(winring0_driver_file_path):
+#         copyfile(os.path.join(lib_path, 'WinRing0x64.sys'), winring0_driver_file_path)
+
+#     ryzenadj = cdll.LoadLibrary('libryzenadj')
+# else:
+#     ryzenadj = cdll.LoadLibrary('libryzenadj.so')
+########
+##############################################
+
 os.chdir(lib_path)
 if sys.platform == 'win32' or sys.platform == 'cygwin':
     try:
-        os.add_dll_directory(lib_path)
+        os.add_dll_directory(base_dir)
     except AttributeError:
         pass #not needed for old python version
 
-    winring0_driver_file_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), 'WinRing0x64.sys')
+    winring0_driver_file_path = os.path.join(base_dir, 'WinRing0x64.sys')
     if not os.path.isfile(winring0_driver_file_path):
-        copyfile(os.path.join(lib_path, 'WinRing0x64.sys'), winring0_driver_file_path)
+        copyfile(os.path.join(base_dir, 'WinRing0x64.sys'), winring0_driver_file_path)
 
-    ryzenadj = cdll.LoadLibrary('libryzenadj')
+    ryzenadj = cdll.LoadLibrary(os.path.join(base_dir, 'libryzenadj'))
 else:
     ryzenadj = cdll.LoadLibrary('libryzenadj.so')
-########
 
 ##### cannot access memory??? when running gets
 # if getattr(sys, 'frozen', False):
