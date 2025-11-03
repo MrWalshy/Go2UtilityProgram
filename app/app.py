@@ -4,9 +4,6 @@ import os
 import subprocess
 from tkinter import messagebox
 
-from logic.sys_info import test
-from logic.ryzenadj.ryzenadj_wrapper import test_get
-
 CONFIG_FILE = os.path.join(os.getenv("APPDATA"), "Go2Utility", "config.txt")
 
 def run_as_admin():
@@ -61,6 +58,8 @@ if __name__ == "__main__":
     run_first_time_setup()
 
     try:
+        from logic.sys_info import test
+        from logic.ryzenadj.ryzenadj_wrapper import test_get
         test()
         test_get()
         
