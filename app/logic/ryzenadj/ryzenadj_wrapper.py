@@ -15,6 +15,8 @@ if getattr(sys, 'frozen', False):
 else:
     base_dir = os.path.dirname(os.path.abspath(__file__)) # running from script
 
+print(lib_path)
+print(base_dir)
 #############################
 ######## if i don't include this, the script shits itself for some reason and won't init ryzenadj
 ## this works for running the python script, but fails for pyinstall exe as it cannot find the dir
@@ -49,6 +51,8 @@ if sys.platform == 'win32' or sys.platform == 'cygwin':
     ryzenadj = cdll.LoadLibrary(os.path.join(base_dir, 'libryzenadj'))
 else:
     ryzenadj = cdll.LoadLibrary('libryzenadj.so')
+
+print(ryzenadj)
 
 ##### cannot access memory??? when running gets
 # if getattr(sys, 'frozen', False):
