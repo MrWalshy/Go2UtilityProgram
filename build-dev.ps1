@@ -16,6 +16,7 @@ $distDir = "$PSScriptRoot\dist"
 $runtimeDir = "$distDir\runtime"
 $appDir = "$PSScriptRoot\app"
 $requirementsFile = "$PSScriptRoot\requirements.txt"
+$ryzenAdjDir = "$appDir\logic\ryzenadj"
 
 # clean
 Write-Host "Cleaning $distDir"
@@ -40,5 +41,16 @@ Start-Process -FilePath $pythonExe -ArgumentList "-m pip install -r $requirement
 # copy app folder
 Write-Host "Copying application files"
 Copy-Item -Path $appDir -Destination $runtimeDir -Recurse -Force
+
+# copy dll's next to python.exe
+Write-Host "Copying RyzenAdj dll to runtime folder"
+Copy-Item -Path "$ryzenAdjDir\librzyenadj.dll" - Destination $runtimeDir -Force
+Copy-Item -Path "$ryzenAdjDir\inpoutx64.dll" - Destination $runtimeDir -Force
+Copy-Item -Path "$ryzenAdjDir\WinRing0x64.dll" - Destination $runtimeDir -Force
+Copy-Item -Path "$ryzenAdjDir\WinRing0x64.sys" - Destination $runtimeDir -Force
+
+# clean up
+Write-Host "Cleaning up"
+Remove-Item -Path "$distDir\python-installer.exe"
 
 Write-Host "Build complete. Distribution is in $distDir"
