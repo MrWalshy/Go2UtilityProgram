@@ -44,10 +44,10 @@ Copy-Item -Path $appDir -Destination $runtimeDir -Recurse -Force
 
 # copy dll's next to python.exe
 Write-Host "Copying RyzenAdj dll to runtime folder"
-Copy-Item -Path "$ryzenAdjDir\librzyenadj.dll" - Destination $runtimeDir -Force
-Copy-Item -Path "$ryzenAdjDir\inpoutx64.dll" - Destination $runtimeDir -Force
-Copy-Item -Path "$ryzenAdjDir\WinRing0x64.dll" - Destination $runtimeDir -Force
-Copy-Item -Path "$ryzenAdjDir\WinRing0x64.sys" - Destination $runtimeDir -Force
+Copy-Item -Path "$ryzenAdjDir\librzyenadj.dll" -Destination $runtimeDir -Force
+Copy-Item -Path "$ryzenAdjDir\inpoutx64.dll" -Destination $runtimeDir -Force
+Copy-Item -Path "$ryzenAdjDir\WinRing0x64.dll" -Destination $runtimeDir -Force
+Copy-Item -Path "$ryzenAdjDir\WinRing0x64.sys" -Destination $runtimeDir -Force
 
 # clean up
 Write-Host "Cleaning up"
