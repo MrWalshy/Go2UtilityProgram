@@ -3,7 +3,7 @@ import os, sys, subprocess
 def main():
     # path to Python interpreter and entry script
     python_exe = os.path.join(os.path.dirname(sys.executable), "runtime", "python.exe")
-    app_entry_point = os.path.join(os.path.dirname(sys.executable), "app", "app.py")
+    app_entry_point = os.path.join(os.path.dirname(sys.executable), "runtime", "app", "app.py")
 
     if not os.path.exists(python_exe):
         print("Error: Python runtime not found at", python_exe)
