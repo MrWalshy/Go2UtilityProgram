@@ -18,13 +18,16 @@ $appDir = "$PSScriptRoot\app"
 $requirementsFile = "$PSScriptRoot\requirements.txt"
 
 # clean
+Write-Host "Cleaning $distDir"
 if (Test-Path $distDir) { Remove-Item -Recurse -Force $distDir }
 New-Item -ItemType Directory -Path $runtimeDir
 
 # launcher file
-pyinstaller --onefile --name launcher "$PSScriptRoot\launcher.py" --distpath $distDir
+Write-Host "Creating launcher"
+pyinstaller --onefile --name launcher "$PSScriptRoot\launcher\launcher.py" --distpath $distDir
 
 # download + install
+Write-Host "Downloading and installing Python to distribution"
 $installerPath = "$distDir\python-installer.exe"
 Invoke-WebRequest -Uri $pythonInstallerUrl -OutFile $installerPath
 Start-Process -FilePath $installerPath -ArgumentList "/quiet InstallAllUsers=0 TargetDir=$runtimeDir PrependPath=0" -Wait
@@ -35,6 +38,7 @@ Start-Process -FilePath $pythonExe -ArgumentList "-m pip install --upgrade pip" 
 Start-Process -FilePath $pythonExe -ArgumentList "-m pip install -r $requirementsFile --target $runtimeDir\Lib\site-packages" -Wait
 
 # copy app folder
+Write-Host "Copying application files"
 Copy-Item -Path $appDir -Destination $distDir -Recurse -Force
 
 Write-Host "Build complete. Distribution is in $distDir"
