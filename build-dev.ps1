@@ -39,6 +39,6 @@ Start-Process -FilePath $pythonExe -ArgumentList "-m pip install -r $requirement
 
 # copy app folder
 Write-Host "Copying application files"
-Copy-Item -Path $appDir -Destination $distDir -Recurse -Force
+Copy-Item -Path $appDir -Destination $runtimeDir -Recurse -Force
 
 Write-Host "Build complete. Distribution is in $distDir"
