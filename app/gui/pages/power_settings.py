@@ -1,11 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
+from gui.pages.page import Page
 
-class PowerSettingsPage(tk.Frame):
+class PowerSettingsPage(Page):
 
-    def __init__(self, master = None, controller = None):
+    def __init__(self, master = None):
         super().__init__(master)
-        self.controller = controller
 
         tk.Label(self, text = "Power settings", font = ("Segoe UI", 14, "bold")).pack(pady = 5)
         text = tk.Text(self)
@@ -15,5 +15,3 @@ class PowerSettingsPage(tk.Frame):
         text.insert("4.0", "- Auto TDP: Auto adjusts TDP to maintain a specified FPS in game.")
         text.pack(pady = 5)
     
-    def apply_settings(self):
-        pass

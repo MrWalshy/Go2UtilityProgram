@@ -15,8 +15,8 @@ if getattr(sys, 'frozen', False):
 else:
     base_dir = os.path.dirname(os.path.abspath(__file__)) # running from script
 
-print(lib_path)
-print(base_dir)
+# print(lib_path)
+# print(base_dir)
 #############################
 ######## if i don't include this, the script shits itself for some reason and won't init ryzenadj
 ## this works for running the python script, but fails for pyinstall exe as it cannot find the dir
@@ -52,7 +52,7 @@ if sys.platform == 'win32' or sys.platform == 'cygwin':
 else:
     ryzenadj = cdll.LoadLibrary('libryzenadj.so')
 
-print(ryzenadj)
+#print(ryzenadj)
 
 ##### cannot access memory??? when running gets
 # if getattr(sys, 'frozen', False):
@@ -172,44 +172,44 @@ def get(field):
         return None
 
 # get func just tells me memory cannot be accessed, will just try what is in the example script to check for diff response
-print("pmtable version: {:x}".format(ryzenadj.get_table_ver(ry)))
+#print("pmtable version: {:x}".format(ryzenadj.get_table_ver(ry)))
 
 #input("Press any key to show all pmtable values...")
 
-pmtable_size = ryzenadj.get_table_size(ry) // 4
-pmtable = ryzenadj.get_table_values(ry)
+# pmtable_size = ryzenadj.get_table_size(ry) // 4
+# pmtable = ryzenadj.get_table_values(ry)
 
-def test_get():
-    #ryzenadj.refresh_table(ry) # need to do this to make sure ryzenadj has read in the data, otherwise I just get nan
-    i = 0
-    while i < 10: # let's just see if its a weird timing issue
-        ryzenadj.refresh_table(ry)
-        columns, lines = os.get_terminal_size()
-        table_columns = columns // 16 # 16 chars per table entry
-        #os.system('cls' if sys.platform == 'win32' else 'clear')
-        table_rows = 0
-        for index in (range(pmtable_size)):
-            print("{:3d}:{:8.2f}\t".format(index, pmtable[index]))
-            if index % table_columns == table_columns - 1: 
-                print('\n')
-                table_rows += 1
-                if table_rows >= lines - 1:
-                    print('{:d} More entries ...'.format(pmtable_size - 1 - index))
-                    break
-        i += 1
-        time.sleep(1) 
-    #if index % table_columns != table_columns - 1: print('\n')
-    #sys.stdout.flush()
-    #time.sleep(1)
-    # this tells me the memory cannot be accessed? WHYYYYYYY?
-    for func, description in getter_fields.items():
-        print(f"Attempting get for {func}: {description}")
-        value = get(func)
-        print(f"  Received: {value}")
+# def test_get():
+#     #ryzenadj.refresh_table(ry) # need to do this to make sure ryzenadj has read in the data, otherwise I just get nan
+#     i = 0
+#     while i < 10: # let's just see if its a weird timing issue
+#         ryzenadj.refresh_table(ry)
+#         columns, lines = os.get_terminal_size()
+#         table_columns = columns // 16 # 16 chars per table entry
+#         #os.system('cls' if sys.platform == 'win32' else 'clear')
+#         table_rows = 0
+#         for index in (range(pmtable_size)):
+#             print("{:3d}:{:8.2f}\t".format(index, pmtable[index]))
+#             if index % table_columns == table_columns - 1: 
+#                 print('\n')
+#                 table_rows += 1
+#                 if table_rows >= lines - 1:
+#                     print('{:d} More entries ...'.format(pmtable_size - 1 - index))
+#                     break
+#         i += 1
+#         time.sleep(1) 
+#     #if index % table_columns != table_columns - 1: print('\n')
+#     #sys.stdout.flush()
+#     #time.sleep(1)
+#     # this tells me the memory cannot be accessed? WHYYYYYYY?
+#     for func, description in getter_fields.items():
+#         print(f"Attempting get for {func}: {description}")
+#         value = get(func)
+#         print(f"  Received: {value}")
 
-    # let's see if trying to manually call the stapm function works
-    get_func = ryzenadj.get_stapm_limit
-    get_func.argtypes = [c_void_p]
-    get_func.restype = c_float
-    value = get_func(ry)
-    print("STAPM limit:", value)
+#     # let's see if trying to manually call the stapm function works
+#     get_func = ryzenadj.get_stapm_limit
+#     get_func.argtypes = [c_void_p]
+#     get_func.restype = c_float
+#     value = get_func(ry)
+#     print("STAPM limit:", value)

@@ -57,19 +57,16 @@ if __name__ == "__main__":
     run_as_admin()
     run_first_time_setup()
 
-    try:
-        from logic.sys_info import test
-        from logic.ryzenadj.ryzenadj_wrapper import test_get
-        test()
-        test_get()
-        
+    try:        
         from gui.window import Window
         from gui.pages.processor_settings import ProcessorSettingsPage
         from gui.pages.power_settings import PowerSettingsPage
+        from gui.pages.system_overview import SystemOverviewPage
 
         window = Window(pages = [
             (ProcessorSettingsPage, "Processor performance settings"),
-            (PowerSettingsPage, "Power settings")
+            (PowerSettingsPage, "Power settings"),
+            (SystemOverviewPage, "System overview")
         ])
         window.mainloop()
     except Exception as e:
